@@ -1,0 +1,65 @@
+<style>
+  .options {
+    text-align: center;
+  }
+
+  .grant {
+    display: inline-block;
+    padding: 50px;
+    vertical-align: top;
+  }
+</style>
+<div class="options">
+  <div>
+    <%= image_tag("https://avatars0.githubusercontent.com/u/1316274?v=3&s=200", style: 'width:150px; border-radius: 10px;') %>
+  </div>
+
+  <% if session[:access_token] %>
+
+    <div>
+      <%= session[:access_token] %>
+    </div>
+
+    <%= form_tag({controller: '/oauth', action: 'clear'}) do %>
+
+      <div style="padding-top: 15px;">
+        <button type="submit">Logout</button>
+      </div>
+
+    <% end %>
+
+  <% else %>
+    <h1>Choose Your Grant Type</h1>
+
+    <div>
+      <div class="grant">
+        <h3>Authorization Code</h3>
+        <a href="/oauth/authorize?type=authorization_code">Authorize</a>
+      </div>
+      <div class="grant">
+        <h3>Implicit</h3>
+        <a href="/auth/translationexchange?type=implicit">Authorize</a>
+      </div>
+      <div class="grant">
+        <h3>Password</h3>
+        <%= form_tag({controller: '/oauth', action: 'authorize'}) do %>
+          <%= hidden_field_tag(:type, 'password') %>
+          <div>
+            <%= text_field_tag(:username, params[:username], placeholder: 'Username') %>
+          </div>
+          <div>
+            <%= password_field_tag(:password, '', placeholder: 'Password') %>
+          </div>
+          <div style="padding-top: 15px;">
+            <button type="submit">Authorize</button>
+          </div>
+        <% end %>
+      </div>
+      <div class="grant">
+        <h3>Client Credentials</h3>
+        <a href="/auth/translationexchange?type=client_credentials">Authorize</a>
+      </div>
+    </div>
+  <% end %>
+
+</div>
